@@ -1,33 +1,33 @@
 # ROS package tutorial
 
 ### Create the workspace
-```
+```bash
 mkdir -p ~/ros_ws/src
 cd ~/ros_ws/src
 catkin_init_workspace
 ```
 Add to sourced files (e.g. `~/.bash_aliases`) this line
-```
+```bash
 source ~/ros_ws/devel/setup.bash
 ```
 
 ### Install a package
-```
+```bash
 sudo apt-get install ros-melodic-[package_name]
 ```
 
 ### Build the workspace
-```
+```bash
 catkin build
 ```
 
 ### Create a new package
-```
+```bash
 cd ~/ros_ws/src
 catkin_create_pkg [package_name] [depend1] [depend2] [depend3]
 ```
 e.g.
-```
+```bash
 catkin_create_pkg intro_tutorial std_msgs roscpp
 ```
 
@@ -40,7 +40,7 @@ catkin_create_pkg intro_tutorial std_msgs roscpp
 
 ### Package folder structure
 ```
-ros_ws
+~/ros_ws/src/intro_tutorial
 ├── action
 │  └── Fibonacci.action
 ├── CMakeLists.txt
@@ -52,24 +52,23 @@ ros_ws
 │  └── msg1.msg
 ├── package.xml
 ├── src
-│  ├── .ycm_extra_conf.py
-│  ├── example1_a.cpp
-│  ├── example1_b.cpp
-│  ├── example2_a.cpp
-│  ├── example2_b.cpp
-│  ├── example3_a.cpp
-│  ├── example3_b.cpp
-│  ├── fibonacci_client.cpp
-│  └── fibonacci_server.cpp
+│  ├── ex1_publisher.cpp
+│  ├── ex1_subscriber.cpp
+│  ├── ex2_msg_publisher.cpp
+│  ├── ex2_msg_subscriber.cpp
+│  ├── ex3_add3ints_client.cpp
+│  ├── ex3_add3ints_server.cpp
+│  ├── ex4_fibonacci_client.cpp
+│  └── ex4_fibonacci_server.cpp
 └── srv
    └── srv1.srv
 ```
 
-### Start ros and check node status
+### Start ros and check status
 Start ros with `roscore`.
 
 Info on nodes
-```
+```bash
 rosnode list
 rosnode info [node_name]
 rosnode kill [node_name]
@@ -78,7 +77,7 @@ rosnode ping [node_name]
 ```
 
 Info on topics
-```
+```bash
 rostopic echo [msg_name]
 rostopic find [msg_type]
 rostopic info [msg_name]
@@ -86,9 +85,26 @@ rostopic list
 rostopic type [msg_name]
 ```
 
+Info on messages
+```bash
+rosmsg show [msg_name]
+rosmsg list
+rosmsg [package_name]
+rosmsg packages [msg_name]
+```
+
+Info on services
+```bash
+rosservice call [srv_name] [args]
+rosservice find [srv_type]
+rosservice info [srv_name]
+rosservice list
+rosservice type [srv_name]
+```
+
 ### Publisher - subscriber
 Run the example
-```
+```bash
 rosrun intro_tutorial ex1_publisher
 rosrun intro_tutorial ex1_subscriber
 ```
@@ -171,31 +187,148 @@ else {
 }
 ```
 
+### Use actions
+Define the action structure in `action/Fibonacci.action`
+```
+#goal definition
+int32 order
+---
+#result definition
+int32[] sequence
+---
+#feedback
+int32[] sequence
+```
+
+Create the class FibonacciAction server side
+```cpp
+protected:
+    ros::NodeHandle nh_;
+    // create the server
+    actionlib::SimpleActionServer<intro_tutorial::FibonacciAction> as_;
+    std::string action_name_;
+    intro_tutorial::FibonacciFeedback feedback_;
+    intro_tutorial::FibonacciResult result_;
+public:
+    FibonacciAction(std::string name) :
+        as_(nh_,
+            name,
+            boost::bind(&FibonacciAction::executeCB,
+                        this,
+                        _1),
+            false
+        ),
+        action_name_(name){
+            as_.start();
+        }
+```
+Setup the client side
+```cpp
+// create the client
+actionlib::SimpleActionClient<intro_tutorial::FibonacciAction> ac("fibonacci", true);
+// setup goal
+intro_tutorial::FibonacciGoal goal;
+goal.order = 20;
+ac.sendGoal(goal);
+```
+
+### Setup environment with launch file
+Create the launch file `example1.launch`
+```xml
+<?xml version="1.0"?>
+<launch>
+    <node name ="ex1_publisher" pkg="intro_tutorial" type="ex1_publisher"/>
+    <node name ="ex1_subscriber" pkg="intro_tutorial" type="ex1_subscriber"/>
+</launch>
+```
+And launch with
+```bash
+roslaunch intro_tutorial example1.launch
+```
+
+
 ### CMake/manifest structure
 
 In the `CMakeList.txt` file
-```
+```cmake
+cmake_minimum_required(VERSION 2.8.3)
+project(intro_tutorial)
+
+## Find catkin macros and libraries
+find_package(
+    catkin REQUIRED COMPONENTS
+        roscpp
+        std_msgs
+        message_generation
+        actionlib
+)
+
+## Generate messages in the 'msg' folder
 add_message_files(
     FILES
         msg1.msg
 )
+
+## Generate services in the 'srv' folder
+add_service_files(
+    FILES
+        srv1.srv
+)
+
+## Generate actions in the 'action' folder
+add_action_files(
+    DIRECTORY
+        action
+    FILES
+        Fibonacci.action
+)
+
+## Generate added messages and services with any dependencies listed here
 generate_messages(
     DEPENDENCIES
         std_msgs
+        actionlib_msgs
 )
+
 catkin_package(
     CATKIN_DEPENDS
         message_runtime
+        std_msgs
+        actionlib
 )
-find_package(catkin REQUIRED COMPONENTS
-    roscpp
-    std_msgs
-    message_generation
+
+include_directories(
+    ${catkin_INCLUDE_DIRS}
 )
+
+## Declare a C++ executable
+add_executable(ex1_publisher src/ex1_publisher.cpp)
+add_dependencies(ex1_publisher intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex1_publisher ${catkin_LIBRARIES})
 ```
 
 In the `package.xml` file
 ```xml
-<build_depend>message_generation</build_depend>
-<exec_depend>message_runtime</exec_depend>
+<?xml version="1.0"?>
+<package format="2">
+  <name>intro_tutorial</name>
+  <version>0.0.0</version>
+  <description>The intro_tutorial package</description>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+
+  <build_depend>std_msgs</build_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
+  <depend>actionlib</depend>
+
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+</package>
 ```

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-    <node name ="example1_a" pkg="intro_tutorial" type="example1_a"/>
-    <node name ="example1_b" pkg="intro_tutorial" type="example1_b"/>
+    <node name ="ex1_publisher" pkg="intro_tutorial" type="ex1_publisher"/>
+    <node name ="ex1_subscriber" pkg="intro_tutorial" type="ex1_subscriber"/>
 </launch>

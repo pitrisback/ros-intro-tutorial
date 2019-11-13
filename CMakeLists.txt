@@ -123,7 +123,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-  ${catkin_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -248,30 +248,30 @@ target_link_libraries(ex1_subscriber ${catkin_LIBRARIES})
 
 ########### example2 ###########
 
-add_executable(example2_a src/example2_a.cpp)
-add_dependencies(example2_a intro_tutorial_generate_messages_cpp)
-target_link_libraries(example2_a ${catkin_LIBRARIES})
+add_executable(ex2_msg_publisher src/ex2_msg_publisher.cpp)
+add_dependencies(ex2_msg_publisher intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex2_msg_publisher ${catkin_LIBRARIES})
 
-add_executable(example2_b src/example2_b.cpp)
-add_dependencies(example2_b intro_tutorial_generate_messages_cpp)
-target_link_libraries(example2_b ${catkin_LIBRARIES})
+add_executable(ex2_msg_subscriber src/ex2_msg_subscriber.cpp)
+add_dependencies(ex2_msg_subscriber intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex2_msg_subscriber ${catkin_LIBRARIES})
 
 ########### example3 ###########
 
-add_executable(example3_a src/example3_a.cpp)
-add_dependencies(example3_a intro_tutorial_generate_messages_cpp)
-target_link_libraries(example3_a ${catkin_LIBRARIES})
+add_executable(ex3_add3ints_client src/ex3_add3ints_client.cpp)
+add_dependencies(ex3_add3ints_client intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex3_add3ints_client ${catkin_LIBRARIES})
 
-add_executable(example3_b src/example3_b.cpp)
-add_dependencies(example3_b intro_tutorial_generate_messages_cpp)
-target_link_libraries(example3_b ${catkin_LIBRARIES})
+add_executable(ex3_add3ints_server src/ex3_add3ints_server.cpp)
+add_dependencies(ex3_add3ints_server intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex3_add3ints_server ${catkin_LIBRARIES})
 
 ########### fibonacci_server ###########
 
-add_executable(fibonacci_server src/fibonacci_server.cpp)
-target_link_libraries(fibonacci_server ${catkin_LIBRARIES})
-add_dependencies(fibonacci_server ${intro_tutorial_EXPORTED_TARGETS})
+add_executable(ex4_fibonacci_server src/ex4_fibonacci_server.cpp)
+target_link_libraries(ex4_fibonacci_server ${catkin_LIBRARIES})
+add_dependencies(ex4_fibonacci_server ${intro_tutorial_EXPORTED_TARGETS})
 
-add_executable(fibonacci_client src/fibonacci_client.cpp)
-target_link_libraries(fibonacci_client ${catkin_LIBRARIES})
-add_dependencies(fibonacci_client ${intro_tutorial_EXPORTED_TARGETS})
+add_executable(ex4_fibonacci_client src/ex4_fibonacci_client.cpp)
+target_link_libraries(ex4_fibonacci_client ${catkin_LIBRARIES})
+add_dependencies(ex4_fibonacci_client ${intro_tutorial_EXPORTED_TARGETS})

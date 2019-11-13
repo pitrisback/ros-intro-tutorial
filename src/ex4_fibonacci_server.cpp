@@ -12,8 +12,14 @@ class FibonacciAction{
         intro_tutorial::FibonacciResult result_;
 
     public:
-        FibonacciAction(std::string name) : as_(nh_, name, boost::bind(&FibonacciAction::executeCB, this, _1),
-                false), action_name_(name){
+        FibonacciAction(std::string name) :
+                    as_(nh_,
+                        name,
+                        boost::bind(&FibonacciAction::executeCB,
+                            this,
+                            _1),
+                        false),
+                    action_name_(name) {
             as_.start();
         }
 
@@ -26,6 +32,7 @@ class FibonacciAction{
             feedback_.sequence.clear();
             feedback_.sequence.push_back(0);
             feedback_.sequence.push_back(1);
+            // 
             for(int i=1; i<=goal->order; i++){
                 if (as_.isPreemptRequested() || !ros::ok()){
                     ROS_INFO("%s: Preempted", action_name_.c_str());
