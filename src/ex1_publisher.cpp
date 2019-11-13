@@ -3,11 +3,10 @@
 #include <sstream>
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "example1_a");
+    ros::init(argc, argv, "ex1_publisher");
     ros::NodeHandle n;
-    ros::Publisher chatter_pub =
-    n.advertise<std_msgs::String>("message", 1000);
-    ros::Rate loop_rate(10);
+    ros::Publisher chatter_pub = n.advertise<std_msgs::String>("message", 1000);
+    ros::Rate loop_rate(1);
     while (ros::ok())
     {
         std_msgs::String msg;

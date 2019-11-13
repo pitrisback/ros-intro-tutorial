@@ -238,35 +238,32 @@ include_directories(
 
 ########### example1 ###########
 
-add_executable(example1_a src/example1_a.cpp)
-add_executable(example1_b src/example1_b.cpp)
+add_executable(ex1_publisher src/ex1_publisher.cpp)
+add_dependencies(ex1_publisher intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex1_publisher ${catkin_LIBRARIES})
 
-add_dependencies(example1_a intro_tutorial_generate_messages_cpp)
-add_dependencies(example1_b intro_tutorial_generate_messages_cpp)
-
-target_link_libraries(example1_a ${catkin_LIBRARIES})
-target_link_libraries(example1_b ${catkin_LIBRARIES})
+add_executable(ex1_subscriber src/ex1_subscriber.cpp)
+add_dependencies(ex1_subscriber intro_tutorial_generate_messages_cpp)
+target_link_libraries(ex1_subscriber ${catkin_LIBRARIES})
 
 ########### example2 ###########
 
 add_executable(example2_a src/example2_a.cpp)
-add_executable(example2_b src/example2_b.cpp)
-
 add_dependencies(example2_a intro_tutorial_generate_messages_cpp)
-add_dependencies(example2_b intro_tutorial_generate_messages_cpp)
-
 target_link_libraries(example2_a ${catkin_LIBRARIES})
+
+add_executable(example2_b src/example2_b.cpp)
+add_dependencies(example2_b intro_tutorial_generate_messages_cpp)
 target_link_libraries(example2_b ${catkin_LIBRARIES})
 
 ########### example3 ###########
 
 add_executable(example3_a src/example3_a.cpp)
-add_executable(example3_b src/example3_b.cpp)
-
 add_dependencies(example3_a intro_tutorial_generate_messages_cpp)
-add_dependencies(example3_b intro_tutorial_generate_messages_cpp)
-
 target_link_libraries(example3_a ${catkin_LIBRARIES})
+
+add_executable(example3_b src/example3_b.cpp)
+add_dependencies(example3_b intro_tutorial_generate_messages_cpp)
 target_link_libraries(example3_b ${catkin_LIBRARIES})
 
 ########### fibonacci_server ###########

@@ -6,8 +6,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "example2_a");
     ros::NodeHandle n;
-    ros::Publisher pub =
-    n.advertise<intro_tutorial::msg1>("message", 1000);
+    ros::Publisher pub = n.advertise<intro_tutorial::msg1>("message", 1000);
     ros::Rate loop_rate(10);
     while (ros::ok())
     {

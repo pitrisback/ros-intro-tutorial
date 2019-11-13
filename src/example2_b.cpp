@@ -10,8 +10,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "example2_b");
     ros::NodeHandle n;
-    ros::Subscriber sub = n.subscribe("message",
-    1000, messageCallback);
+    ros::Subscriber sub = n.subscribe("message", 1000, messageCallback);
     ros::spin();
     return 0;
 }
