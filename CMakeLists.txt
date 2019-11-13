@@ -53,11 +53,12 @@ add_message_files(
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
+add_service_files(
+    FILES
+    srv1.srv
 #   Service1.srv
 #   Service2.srv
-# )
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -251,4 +252,15 @@ add_dependencies(example2_b intro_tutorial_generate_messages_cpp)
 
 target_link_libraries(example2_a ${catkin_LIBRARIES})
 target_link_libraries(example2_b ${catkin_LIBRARIES})
+
+########### example3 ###########
+
+add_executable(example3_a src/example3_a.cpp)
+add_executable(example3_b src/example3_b.cpp)
+
+add_dependencies(example3_a intro_tutorial_generate_messages_cpp)
+add_dependencies(example3_b intro_tutorial_generate_messages_cpp)
+
+target_link_libraries(example3_a ${catkin_LIBRARIES})
+target_link_libraries(example3_b ${catkin_LIBRARIES})
 
