@@ -7,10 +7,12 @@ project(intro_tutorial)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-    roscpp
-    std_msgs
-    message_generation
+find_package(
+    catkin REQUIRED COMPONENTS
+        roscpp
+        std_msgs
+        message_generation
+        actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -48,29 +50,29 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-#   FILES
-    FILES msg1.msg
+    FILES
+        msg1.msg
 )
 
 ## Generate services in the 'srv' folder
 add_service_files(
     FILES
-    srv1.srv
-#   Service1.srv
-#   Service2.srv
+        srv1.srv
 )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+    DIRECTORY
+        action
+    FILES
+        Fibonacci.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
     DEPENDENCIES
-    std_msgs
+        std_msgs
+        actionlib_msgs
 )
 
 ################################################
@@ -107,7 +109,10 @@ catkin_package(
 #  LIBRARIES intro_tutorial
 #  CATKIN_DEPENDS roscpp std_msgs
 #  DEPENDS system_lib
-    CATKIN_DEPENDS message_runtime std_msgs
+    CATKIN_DEPENDS
+        message_runtime
+        std_msgs
+        actionlib
 )
 
 ###########
@@ -264,3 +269,12 @@ add_dependencies(example3_b intro_tutorial_generate_messages_cpp)
 target_link_libraries(example3_a ${catkin_LIBRARIES})
 target_link_libraries(example3_b ${catkin_LIBRARIES})
 
+########### fibonacci_server ###########
+
+add_executable(fibonacci_server src/fibonacci_server.cpp)
+target_link_libraries(fibonacci_server ${catkin_LIBRARIES})
+add_dependencies(fibonacci_server ${intro_tutorial_EXPORTED_TARGETS})
+
+add_executable(fibonacci_client src/fibonacci_client.cpp)
+target_link_libraries(fibonacci_client ${catkin_LIBRARIES})
+add_dependencies(fibonacci_client ${intro_tutorial_EXPORTED_TARGETS})
