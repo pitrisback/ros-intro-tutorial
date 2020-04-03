@@ -66,6 +66,7 @@ add_action_files(
         action
     FILES
         Fibonacci.action
+        Test.action
 )
 
 ## Generate added messages and services with any dependencies listed here
