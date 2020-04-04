@@ -28,10 +28,8 @@ from actionlib_msgs.msg import *
 
 # Create a trivial action server
 class TestServer:
-    def __init__(self,name):
-        self._sas = SimpleActionServer(name,
-                TestAction,
-                execute_cb=self.execute_cb)
+    def __init__(self, name):
+        self._sas = SimpleActionServer(name, TestAction, execute_cb=self.execute_cb)
 
     def execute_cb(self, msg):
         if msg.goal == 0:
@@ -41,14 +39,15 @@ class TestServer:
         elif msg.goal == 2:
             self._sas.set_preempted()
 
+
 def main():
-    rospy.init_node('smach_example_actionlib')
+    rospy.init_node("smach_example_actionlib")
 
     # Start an action server
-    server = TestServer('test_action')
+    server = TestServer("test_action")
 
     # Create a SMACH state machine
-    sm0 = smach.StateMachine(outcomes=['succeeded','aborted','preempted'])
+    sm0 = smach.StateMachine(outcomes=["succeeded", "aborted", "preempted"])
 
     # Open the container
     with sm0:
@@ -58,25 +57,31 @@ def main():
         # As seen in TestServer above, an empty goal will always return with
         # GoalStatus.SUCCEEDED, causing this simple action state to return
         # the outcome 'succeeded'
-        smach.StateMachine.add('GOAL_DEFAULT',
-                smach_ros.SimpleActionState('test_action', TestAction),
-                {'succeeded':'GOAL_STATIC'})
+        smach.StateMachine.add(
+            "GOAL_DEFAULT",
+            smach_ros.SimpleActionState("test_action", TestAction),
+            {"succeeded": "GOAL_STATIC"},
+        )
 
         # Add another simple action state. This will give a goal
         # that should abort the action state when it is received, so we
         # map 'aborted' for this state onto 'succeeded' for the state machine.
-        smach.StateMachine.add('GOAL_STATIC',
-                smach_ros.SimpleActionState('test_action', TestAction,
-                    goal = TestGoal(goal=1)),
-                {'aborted':'succeeded'})
+        smach.StateMachine.add(
+            "GOAL_STATIC",
+            smach_ros.SimpleActionState(
+                "test_action", TestAction, goal=TestGoal(goal=1)
+            ),
+            {"aborted": "succeeded"},
+        )
 
-        # For more examples on how to set goals and process results, see 
+        # For more examples on how to set goals and process results, see
         # executive_python/smach/tests/smach_actionlib.py
 
     # Execute SMACH plan
     outcome = sm0.execute()
 
-    rospy.signal_shutdown('All done.')
+    rospy.signal_shutdown("All done.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -17,27 +17,29 @@ Output:
 
 import smach
 
+
 class ExampleState(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes = ['done'])
+        smach.State.__init__(self, outcomes=["done"])
+
     def execute(self, ud):
-        return 'done'
+        return "done"
+
 
 def main():
     # Create a SMACH state machine
-    sm = smach.StateMachine(outcomes=['succeeded','aborted'])
+    sm = smach.StateMachine(outcomes=["succeeded", "aborted"])
 
     # Open the container
     with sm:
         # Add states to the container
-        smach.StateMachine.add('FOO', ExampleState(), {'done':'BAR'})
-        smach.StateMachine.add('BAR', ExampleState(), {'done':'BAZ'})
-        smach.StateMachine.add('BAZ',
-                               ExampleState(),
-                               {'done':'succeeded'})
+        smach.StateMachine.add("FOO", ExampleState(), {"done": "BAR"})
+        smach.StateMachine.add("BAR", ExampleState(), {"done": "BAZ"})
+        smach.StateMachine.add("BAZ", ExampleState(), {"done": "succeeded"})
 
     # Execute SMACH plan
     outcome = sm.execute()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

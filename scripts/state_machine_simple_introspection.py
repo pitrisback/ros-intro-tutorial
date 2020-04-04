@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+
 for p in sys.path:
     print p
 
